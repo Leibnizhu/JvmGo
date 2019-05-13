@@ -14,8 +14,8 @@ type ConstantStringInfo struct {
 	stringIndex uint16
 }
 
-//读取到string的时候，可能对应的utf8常量还没读入到 ConstPool ，
-// 所以这里只保存ConstPool的指针，等String()方法调用的时候才去ConstPool读取字符串真正的值
+//读取到string的时候，可能对应的utf8常量还没读入到 ConstantPool ，
+// 所以这里只保存ConstantPool的指针，等String()方法调用的时候才去ConstantPool读取字符串真正的值
 func (self *ConstantStringInfo) readInfo(reader *ClassReader) {
 	self.stringIndex = reader.readUint16()
 }

@@ -1,16 +1,16 @@
 package classfile
 //class文件类字段和类方法的结构体
 type MemberInfo struct {
-	cp ConstPool
+	cp ConstantPool
 	accessFlags uint16 //访问标志
 	nameIndex uint16 //名字的常量池指针
 	descriptorIndex uint16 //字段或方法的描述符，的常量池指针
-	attributes []Attribute //属性表
+	attributes []AttributeInfo //属性表
 }
 
 //读取字段表/方法表
 func readMembers (reader *ClassReader, cp ConstantPool) []*MemberInfo {
-	memberCount :=  reader.readerUint16() //个数
+	memberCount :=  reader.readUint16() //个数
 	members := make([]*MemberInfo, memberCount) //初始化存放字段表/方法表的数组
 	for i := range members {
 		members[i] = readMember(reader, cp) //读取单个字段/方法
@@ -22,9 +22,9 @@ func readMembers (reader *ClassReader, cp ConstantPool) []*MemberInfo {
 func readMember (reader *ClassReader, cp ConstantPool) *MemberInfo {
 	return &MemberInfo {
 		cp: cp,
-		accessFlags: reader.readerUint16(),
-		nameIndex: reader.readerUint16(),
-		descriptorIndex: reader.readerUint16(),
+		accessFlags: reader.readUint16(),
+		nameIndex: reader.readUint16(),
+		descriptorIndex: reader.readUint16(),
 		attributes: readAttributes(reader, cp), //读取属性表
 	}
 }
