@@ -18,4 +18,4 @@ mapred-site.xml
 .factorypath
 .settings/
 .project
-.vscode
+#.vscode
