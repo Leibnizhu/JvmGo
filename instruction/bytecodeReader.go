@@ -53,7 +53,7 @@ func (self *BytecodeReader) ReadInt32s(n int32) []int32 {
 	return ints
 }
 
-// 只有 lookupswitch 和 tableswitch 指令会用到
+// 跳过padding，只有 lookupswitch 和 tableswitch 指令会用到
 func (self *BytecodeReader) SkipPadding() {
 	for self.pc%4 != 0 {
 		self.ReadUint8()
