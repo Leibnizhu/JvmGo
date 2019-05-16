@@ -1,6 +1,6 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 
 // 给局部变量表中的int变量增加指定常量值
@@ -9,7 +9,7 @@ type IINC struct {
 	Const int32 //指定要加的常量
 }
 
-func (self *IINC) FetchOperands(reader *instruction.BytecodeReader) {
+func (self *IINC) FetchOperands(reader *base.BytecodeReader) {
 	self.Index = uint(reader.ReadUint8())
 	self.Const = int32(reader.ReadInt8())
 }

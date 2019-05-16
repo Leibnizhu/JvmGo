@@ -1,10 +1,10 @@
 package conversions
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 
 // int 转 byte
-type I2B struct{ instruction.NoOperandsInstruction  }
+type I2B struct{ base.NoOperandsInstruction  }
 
 func (self *I2B) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -14,7 +14,7 @@ func (self *I2B) Execute(frame *rtdata.Frame) {
 }
 
 // int 转 char
-type I2C struct{ instruction.NoOperandsInstruction  }
+type I2C struct{ base.NoOperandsInstruction  }
 
 func (self *I2C) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -24,7 +24,7 @@ func (self *I2C) Execute(frame *rtdata.Frame) {
 }
 
 // int 转 short
-type I2S struct{ instruction.NoOperandsInstruction  }
+type I2S struct{ base.NoOperandsInstruction  }
 
 func (self *I2S) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -34,7 +34,7 @@ func (self *I2S) Execute(frame *rtdata.Frame) {
 }
 
 // int 转 long
-type I2L struct{ instruction.NoOperandsInstruction  }
+type I2L struct{ base.NoOperandsInstruction  }
 
 func (self *I2L) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -44,7 +44,7 @@ func (self *I2L) Execute(frame *rtdata.Frame) {
 }
 
 // int 转 float
-type I2F struct{ instruction.NoOperandsInstruction  }
+type I2F struct{ base.NoOperandsInstruction  }
 
 func (self *I2F) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -54,7 +54,7 @@ func (self *I2F) Execute(frame *rtdata.Frame) {
 }
 
 // int 转 double
-type I2D struct{ instruction.NoOperandsInstruction  }
+type I2D struct{ base.NoOperandsInstruction  }
 
 func (self *I2D) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

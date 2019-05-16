@@ -22,6 +22,12 @@ func startJVM(cmd *Cmd){
 	cf := loadClass(className, cp)
 	fmt.Println(cmd.class)
 	printClassInfo(cf)
+	mainMethod := getMainMethod(cf) //获取main()入口函数
+	if mainMethod != nil {
+		interpret(mainMethod)
+	} else {
+		fmt.Printf("Main method not found in class %s\n", cmd.class)
+	}
 }
 
 func loadClass(className string, cp *classpath.Classpath) *classfile.ClassFile {
@@ -34,6 +40,16 @@ func loadClass(className string, cp *classpath.Classpath) *classfile.ClassFile {
 		panic(err)
 	}
 	return cf
+}
+
+//遍历class文件所有方法，找main方法，注意整个签名
+func getMainMethod(cf *classfile.ClassFile) *classfile.MemberInfo {
+	for _, m := range cf.Methods() {
+		if m.Name() == "main" && m.Descriptor() == "([Ljava/lang/String;)V" {
+			return m
+		}
+	}
+	return nil
 }
 
 func printClassInfo(cf *classfile.ClassFile) {

@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //SUB 减法系列命令
 
 // double 相减
-type DSUB struct{ instruction.NoOperandsInstruction  }
+type DSUB struct{ base.NoOperandsInstruction  }
 
 func (self *DSUB) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -16,7 +16,7 @@ func (self *DSUB) Execute(frame *rtdata.Frame) {
 }
 
 // float 相减
-type FSUB struct{ instruction.NoOperandsInstruction  }
+type FSUB struct{ base.NoOperandsInstruction  }
 
 func (self *FSUB) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -27,7 +27,7 @@ func (self *FSUB) Execute(frame *rtdata.Frame) {
 }
 
 // int 相减
-type ISUB struct{ instruction.NoOperandsInstruction  }
+type ISUB struct{ base.NoOperandsInstruction  }
 
 func (self *ISUB) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -38,7 +38,7 @@ func (self *ISUB) Execute(frame *rtdata.Frame) {
 }
 
 // long 相减
-type LSUB struct{ instruction.NoOperandsInstruction  }
+type LSUB struct{ base.NoOperandsInstruction  }
 
 func (self *LSUB) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

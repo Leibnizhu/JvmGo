@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //左移右移系列指令
 
 // int 左移
-type ISHL struct{ instruction.NoOperandsInstruction  }
+type ISHL struct{ base.NoOperandsInstruction  }
 
 func (self *ISHL) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -17,7 +17,7 @@ func (self *ISHL) Execute(frame *rtdata.Frame) {
 }
 
 // int 有符号右移
-type ISHR struct{ instruction.NoOperandsInstruction  }
+type ISHR struct{ base.NoOperandsInstruction  }
 
 func (self *ISHR) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -29,7 +29,7 @@ func (self *ISHR) Execute(frame *rtdata.Frame) {
 }
 
 // int 无符号右移
-type IUSHR struct{ instruction.NoOperandsInstruction  }
+type IUSHR struct{ base.NoOperandsInstruction  }
 
 func (self *IUSHR) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -41,7 +41,7 @@ func (self *IUSHR) Execute(frame *rtdata.Frame) {
 }
 
 // long 左移
-type LSHL struct{ instruction.NoOperandsInstruction  }
+type LSHL struct{ base.NoOperandsInstruction  }
 
 func (self *LSHL) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -53,7 +53,7 @@ func (self *LSHL) Execute(frame *rtdata.Frame) {
 }
 
 // long 有符号右移
-type LSHR struct{ instruction.NoOperandsInstruction  }
+type LSHR struct{ base.NoOperandsInstruction  }
 
 func (self *LSHR) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -65,7 +65,7 @@ func (self *LSHR) Execute(frame *rtdata.Frame) {
 }
 
 // long 无符号右移
-type LUSHR struct{ instruction.NoOperandsInstruction  }
+type LUSHR struct{ base.NoOperandsInstruction  }
 
 func (self *LUSHR) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

@@ -1,10 +1,10 @@
 package stack
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 
 // 重复栈顶元素 int float 等类型
-type DUP struct{ instruction.NoOperandsInstruction  }
+type DUP struct{ base.NoOperandsInstruction  }
 
 /*
 [...][c][b][a]
@@ -19,7 +19,7 @@ func (self *DUP) Execute(frame *rtdata.Frame) {
 }
 
 // 重复栈顶元素， 插入栈顶2个元素以后
-type DUP_X1 struct{ instruction.NoOperandsInstruction  }
+type DUP_X1 struct{ base.NoOperandsInstruction  }
 
 /*
 [...][c][b][a}
@@ -36,7 +36,7 @@ func (self *DUP_X1) Execute(frame *rtdata.Frame) {
 }
 
 // 重复栈顶元素， 插入到栈顶第3个元素以后
-type DUP_X2 struct{ instruction.NoOperandsInstruction  }
+type DUP_X2 struct{ base.NoOperandsInstruction  }
 
 /*
 [...][c][b][a]
@@ -55,7 +55,7 @@ func (self *DUP_X2) Execute(frame *rtdata.Frame) {
 }
 
 // 复制栈顶2个元素到 栈顶第2个元素后面
-type DUP2 struct{ instruction.NoOperandsInstruction  }
+type DUP2 struct{ base.NoOperandsInstruction  }
 
 /*
 [...][c][b][a]
@@ -73,7 +73,7 @@ func (self *DUP2) Execute(frame *rtdata.Frame) {
 }
 
 // 复制栈顶2个元素到 栈顶第3个元素后面
-type DUP2_X1 struct{ instruction.NoOperandsInstruction  }
+type DUP2_X1 struct{ base.NoOperandsInstruction  }
 
 /*
 [...][c][b][a]
@@ -93,7 +93,7 @@ func (self *DUP2_X1) Execute(frame *rtdata.Frame) {
 }
 
 //  复制栈顶2个元素到 栈顶第4个元素后面
-type DUP2_X2 struct{ instruction.NoOperandsInstruction  }
+type DUP2_X2 struct{ base.NoOperandsInstruction  }
 
 /*
 [...][d][c][b][a]

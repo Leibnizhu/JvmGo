@@ -1,6 +1,6 @@
 package comparisons
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //IF_ICMP 系列指令，操作数栈出栈两个int， 比较，满足条件则跳转
 

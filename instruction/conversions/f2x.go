@@ -1,10 +1,10 @@
 package conversions
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 
 // float 转 double
-type F2D struct{ instruction.NoOperandsInstruction  }
+type F2D struct{ base.NoOperandsInstruction  }
 
 func (self *F2D) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -14,7 +14,7 @@ func (self *F2D) Execute(frame *rtdata.Frame) {
 }
 
 // float 转 int
-type F2I struct{ instruction.NoOperandsInstruction  }
+type F2I struct{ base.NoOperandsInstruction  }
 
 func (self *F2I) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -24,7 +24,7 @@ func (self *F2I) Execute(frame *rtdata.Frame) {
 }
 
 // float 转 long
-type F2L struct{ instruction.NoOperandsInstruction  }
+type F2L struct{ base.NoOperandsInstruction  }
 
 func (self *F2L) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

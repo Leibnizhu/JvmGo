@@ -1,22 +1,22 @@
 package comparisons
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //ACMP 系列指令，判定两个引用型变量是否同一个对象，来进行跳转
 
-type IF_ACMPEQ struct{ instruction.BranchInstruction }
+type IF_ACMPEQ struct{ base.BranchInstruction }
 
 func (self *IF_ACMPEQ) Execute(frame *rtdata.Frame) {
 	if _acmp(frame) {
-		instruction.Branch(frame, self.Offset)
+		base.Branch(frame, self.Offset)
 	}
 }
 
-type IF_ACMPNE struct{ instruction.BranchInstruction }
+type IF_ACMPNE struct{ base.BranchInstruction }
 
 func (self *IF_ACMPNE) Execute(frame *rtdata.Frame) {
 	if !_acmp(frame) {
-		instruction.Branch(frame, self.Offset)
+		base.Branch(frame, self.Offset)
 	}
 }
 

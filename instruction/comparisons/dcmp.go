@@ -1,16 +1,16 @@
 package comparisons
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //DCMP指令系列，double 比较
 
-type DCMPG struct{ instruction.NoOperandsInstruction  }
+type DCMPG struct{ base.NoOperandsInstruction  }
 
 func (self *DCMPG) Execute(frame *rtdata.Frame) {
 	_dcmp(frame, true)
 }
 
-type DCMPL struct{ instruction.NoOperandsInstruction  }
+type DCMPL struct{ base.NoOperandsInstruction  }
 
 func (self *DCMPL) Execute(frame *rtdata.Frame) {
 	_dcmp(frame, false)

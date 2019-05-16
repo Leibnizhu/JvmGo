@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 // XOR 按位异或系列指令
 
 // int 按位异或
-type IXOR struct{ instruction.NoOperandsInstruction  }
+type IXOR struct{ base.NoOperandsInstruction  }
 
 func (self *IXOR) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -16,7 +16,7 @@ func (self *IXOR) Execute(frame *rtdata.Frame) {
 }
 
 // Long 按位异或
-type LXOR struct{ instruction.NoOperandsInstruction  }
+type LXOR struct{ base.NoOperandsInstruction  }
 
 func (self *LXOR) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

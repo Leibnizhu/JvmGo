@@ -1,10 +1,10 @@
 package comparisons
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //LCMP指令，long 比较
 
-type LCMP struct{ instruction.NoOperandsInstruction  }
+type LCMP struct{ base.NoOperandsInstruction  }
 
 func (self *LCMP) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

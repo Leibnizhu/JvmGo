@@ -1,4 +1,4 @@
-package instruction
+package base
 
 //读取字节码的工具
 type BytecodeReader struct {

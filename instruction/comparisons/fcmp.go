@@ -1,16 +1,16 @@
 package comparisons
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //FCMP指令系列，float 比较
 
-type FCMPG struct{ instruction.NoOperandsInstruction  }
+type FCMPG struct{ base.NoOperandsInstruction  }
 
 func (self *FCMPG) Execute(frame *rtdata.Frame) {
 	_fcmp(frame, true)
 }
 
-type FCMPL struct{ instruction.NoOperandsInstruction  }
+type FCMPL struct{ base.NoOperandsInstruction  }
 
 func (self *FCMPL) Execute(frame *rtdata.Frame) {
 	_fcmp(frame, false)

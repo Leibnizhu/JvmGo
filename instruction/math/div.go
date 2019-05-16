@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //DIV 除法系列指令
 
 //  double 相除，浮点型可以计算得到NaN，无需做除数==0的判定
-type DDIV struct{ instruction.NoOperandsInstruction  }
+type DDIV struct{ base.NoOperandsInstruction  }
 
 func (self *DDIV) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -16,7 +16,7 @@ func (self *DDIV) Execute(frame *rtdata.Frame) {
 }
 
 // float 相除，浮点型可以计算得到NaN，无需做除数==0的判定
-type FDIV struct{ instruction.NoOperandsInstruction  }
+type FDIV struct{ base.NoOperandsInstruction  }
 
 func (self *FDIV) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -27,7 +27,7 @@ func (self *FDIV) Execute(frame *rtdata.Frame) {
 }
 
 // int 相除
-type IDIV struct{ instruction.NoOperandsInstruction  }
+type IDIV struct{ base.NoOperandsInstruction  }
 
 func (self *IDIV) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -42,7 +42,7 @@ func (self *IDIV) Execute(frame *rtdata.Frame) {
 }
 
 // long 相除
-type LDIV struct{ instruction.NoOperandsInstruction  }
+type LDIV struct{ base.NoOperandsInstruction  }
 
 func (self *LDIV) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

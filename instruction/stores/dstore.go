@@ -1,34 +1,34 @@
 package stores
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 
 // dstore 系列指令，出栈 double 变量，放入局部变量表
-type DSTORE struct{ instruction.Index8Instruction }
+type DSTORE struct{ base.Index8Instruction }
 
 func (self *DSTORE) Execute(frame *rtdata.Frame) {
 	_dstore(frame, uint(self.Index))
 }
 
-type DSTORE_0 struct{ instruction.NoOperandsInstruction }
+type DSTORE_0 struct{ base.NoOperandsInstruction }
 
 func (self *DSTORE_0) Execute(frame *rtdata.Frame) {
 	_dstore(frame, 0)
 }
 
-type DSTORE_1 struct{ instruction.NoOperandsInstruction }
+type DSTORE_1 struct{ base.NoOperandsInstruction }
 
 func (self *DSTORE_1) Execute(frame *rtdata.Frame) {
 	_dstore(frame, 1)
 }
 
-type DSTORE_2 struct{ instruction.NoOperandsInstruction }
+type DSTORE_2 struct{ base.NoOperandsInstruction }
 
 func (self *DSTORE_2) Execute(frame *rtdata.Frame) {
 	_dstore(frame, 2)
 }
 
-type DSTORE_3 struct{ instruction.NoOperandsInstruction }
+type DSTORE_3 struct{ base.NoOperandsInstruction }
 
 func (self *DSTORE_3) Execute(frame *rtdata.Frame) {
 	_dstore(frame, 3)

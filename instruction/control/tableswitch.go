@@ -1,6 +1,6 @@
 package control
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //switch 跳转， case 连续的情况
 
@@ -28,7 +28,7 @@ type TABLE_SWITCH struct {
 	jumpOffsets   []int32 //各种case下跳转的offset
 }
 
-func (self *TABLE_SWITCH) FetchOperands(reader *instruction.BytecodeReader) {
+func (self *TABLE_SWITCH) FetchOperands(reader *base.BytecodeReader) {
 	reader.SkipPadding() //tableswitch操作码后面有0-3位padding ，保证defaultOffset地址时4的倍数
 	self.defaultOffset = reader.ReadInt32()
 	self.low = reader.ReadInt32()
@@ -47,5 +47,5 @@ func (self *TABLE_SWITCH) Execute(frame *rtdata.Frame) {
 		offset = int(self.defaultOffset)
 	}
 
-	instruction.Branch(frame, offset)
+	base.Branch(frame, offset)
 }

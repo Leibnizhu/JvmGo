@@ -9,8 +9,9 @@ type Frame struct {
 	nextPC       int //下一个指令地址
 }
 
-func NewFrame(maxLocals, maxStack uint) *Frame {
+func newFrame(thread *Thread, maxLocals, maxStack uint) *Frame {
 	return &Frame{
+		thread: thread,
 		localVars:    newLocalVars(maxLocals),
 		operandStack: newOperandStack(maxStack),
 	}

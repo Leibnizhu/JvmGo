@@ -1,10 +1,10 @@
 package stack
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 
 // 交换栈顶2个元素
-type SWAP struct{ instruction.NoOperandsInstruction  }
+type SWAP struct{ base.NoOperandsInstruction  }
 
 /*
 [...][c][b][a]

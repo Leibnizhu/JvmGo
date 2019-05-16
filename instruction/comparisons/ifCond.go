@@ -1,6 +1,6 @@
 package comparisons
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //IF 系列指令
 //把操作数栈出栈int变量，与0比较， 满足条件则跳转

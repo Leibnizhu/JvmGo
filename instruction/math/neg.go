@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //NEG 取反系列指令
 
 // double 取反
-type DNEG struct{ instruction.NoOperandsInstruction  }
+type DNEG struct{ base.NoOperandsInstruction  }
 
 func (self *DNEG) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -14,7 +14,7 @@ func (self *DNEG) Execute(frame *rtdata.Frame) {
 }
 
 // float 取反
-type FNEG struct{ instruction.NoOperandsInstruction  }
+type FNEG struct{ base.NoOperandsInstruction  }
 
 func (self *FNEG) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -23,7 +23,7 @@ func (self *FNEG) Execute(frame *rtdata.Frame) {
 }
 
 // int 取反
-type INEG struct{ instruction.NoOperandsInstruction  }
+type INEG struct{ base.NoOperandsInstruction  }
 
 func (self *INEG) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -32,7 +32,7 @@ func (self *INEG) Execute(frame *rtdata.Frame) {
 }
 
 // long 取反
-type LNEG struct{ instruction.NoOperandsInstruction  }
+type LNEG struct{ base.NoOperandsInstruction  }
 
 func (self *LNEG) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

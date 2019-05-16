@@ -1,34 +1,34 @@
 package loads
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 
 // aload系列方法，从本地变量表加载 引用型 变量载入栈
-type ALOAD struct{ instruction.Index8Instruction }
+type ALOAD struct{ base.Index8Instruction }
 
 func (self *ALOAD) Execute(frame *rtdata.Frame) {
 	_aload(frame, self.Index)
 }
 
-type ALOAD_0 struct{ instruction.NoOperandsInstruction }
+type ALOAD_0 struct{ base.NoOperandsInstruction }
 
 func (self *ALOAD_0) Execute(frame *rtdata.Frame) {
 	_aload(frame, 0)
 }
 
-type ALOAD_1 struct{ instruction.NoOperandsInstruction }
+type ALOAD_1 struct{ base.NoOperandsInstruction }
 
 func (self *ALOAD_1) Execute(frame *rtdata.Frame) {
 	_aload(frame, 1)
 }
 
-type ALOAD_2 struct{ instruction.NoOperandsInstruction }
+type ALOAD_2 struct{ base.NoOperandsInstruction }
 
 func (self *ALOAD_2) Execute(frame *rtdata.Frame) {
 	_aload(frame, 2)
 }
 
-type ALOAD_3 struct{ instruction.NoOperandsInstruction }
+type ALOAD_3 struct{ base.NoOperandsInstruction }
 
 func (self *ALOAD_3) Execute(frame *rtdata.Frame) {
 	_aload(frame, 3)

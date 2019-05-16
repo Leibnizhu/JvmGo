@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //MUL 乘法指令系列
 
 // double 相乘
-type DMUL struct{ instruction.NoOperandsInstruction  }
+type DMUL struct{ base.NoOperandsInstruction  }
 
 func (self *DMUL) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -16,7 +16,7 @@ func (self *DMUL) Execute(frame *rtdata.Frame) {
 }
 
 // float 相乘
-type FMUL struct{ instruction.NoOperandsInstruction  }
+type FMUL struct{ base.NoOperandsInstruction  }
 
 func (self *FMUL) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -27,7 +27,7 @@ func (self *FMUL) Execute(frame *rtdata.Frame) {
 }
 
 // int 相乘
-type IMUL struct{ instruction.NoOperandsInstruction  }
+type IMUL struct{ base.NoOperandsInstruction  }
 
 func (self *IMUL) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -38,7 +38,7 @@ func (self *IMUL) Execute(frame *rtdata.Frame) {
 }
 
 // long 相乘
-type LMUL struct{ instruction.NoOperandsInstruction  }
+type LMUL struct{ base.NoOperandsInstruction  }
 
 func (self *LMUL) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

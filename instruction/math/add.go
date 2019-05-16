@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //ADD 系列指令
 
 //  double 相加
-type DADD struct{ instruction.NoOperandsInstruction  }
+type DADD struct{ base.NoOperandsInstruction  }
 
 func (self *DADD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -16,7 +16,7 @@ func (self *DADD) Execute(frame *rtdata.Frame) {
 }
 
 // float 相加
-type FADD struct{ instruction.NoOperandsInstruction  }
+type FADD struct{ base.NoOperandsInstruction  }
 
 func (self *FADD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -27,7 +27,7 @@ func (self *FADD) Execute(frame *rtdata.Frame) {
 }
 
 // int 相加
-type IADD struct{ instruction.NoOperandsInstruction  }
+type IADD struct{ base.NoOperandsInstruction  }
 
 func (self *IADD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -38,7 +38,7 @@ func (self *IADD) Execute(frame *rtdata.Frame) {
 }
 
 // long 相加
-type LADD struct{ instruction.NoOperandsInstruction  }
+type LADD struct{ base.NoOperandsInstruction  }
 
 func (self *LADD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

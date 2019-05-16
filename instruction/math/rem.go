@@ -1,14 +1,14 @@
 package math
 
 import "math"
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //REM 求余运算指令系列
 
 // double 求余
 //go 没有对浮点型定义求余，这里用math包
 //支持NaN，除数==0不需要抛异常
-type DREM struct{ instruction.NoOperandsInstruction  }
+type DREM struct{ base.NoOperandsInstruction  }
 
 func (self *DREM) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -19,7 +19,7 @@ func (self *DREM) Execute(frame *rtdata.Frame) {
 }
 
 // float 求余
-type FREM struct{ instruction.NoOperandsInstruction  }
+type FREM struct{ base.NoOperandsInstruction  }
 
 func (self *FREM) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -30,7 +30,7 @@ func (self *FREM) Execute(frame *rtdata.Frame) {
 }
 
 // int 求余
-type IREM struct{ instruction.NoOperandsInstruction  }
+type IREM struct{ base.NoOperandsInstruction  }
 
 func (self *IREM) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -45,7 +45,7 @@ func (self *IREM) Execute(frame *rtdata.Frame) {
 }
 
 // long 求余
-type LREM struct{ instruction.NoOperandsInstruction  }
+type LREM struct{ base.NoOperandsInstruction  }
 
 func (self *LREM) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

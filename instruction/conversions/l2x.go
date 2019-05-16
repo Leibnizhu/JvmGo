@@ -1,11 +1,11 @@
 package conversions
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //I2X 系列 int转其他类型指令
 
 // long 转 double
-type L2D struct{ instruction.NoOperandsInstruction  }
+type L2D struct{ base.NoOperandsInstruction  }
 
 func (self *L2D) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -15,7 +15,7 @@ func (self *L2D) Execute(frame *rtdata.Frame) {
 }
 
 // long 转 float
-type L2F struct{ instruction.NoOperandsInstruction  }
+type L2F struct{ base.NoOperandsInstruction  }
 
 func (self *L2F) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -25,7 +25,7 @@ func (self *L2F) Execute(frame *rtdata.Frame) {
 }
 
 // long 转 int
-type L2I struct{ instruction.NoOperandsInstruction  }
+type L2I struct{ base.NoOperandsInstruction  }
 
 func (self *L2I) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()

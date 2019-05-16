@@ -1,11 +1,11 @@
 package math
 
-import "jvmgo/instruction"
+import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 //AND 系列指令
 
 //INT 的按位与运算
-type IAND struct{ instruction.NoOperandsInstruction  }
+type IAND struct{ base.NoOperandsInstruction  }
 
 func (self *IAND) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
@@ -16,7 +16,7 @@ func (self *IAND) Execute(frame *rtdata.Frame) {
 }
 
 // long 的按位与运算
-type LAND struct{ instruction.NoOperandsInstruction  }
+type LAND struct{ base.NoOperandsInstruction  }
 
 func (self *LAND) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
