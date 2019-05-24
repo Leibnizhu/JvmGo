@@ -1,5 +1,7 @@
 package rtdata
 
+import "jvmgo/rtdata/heap"
+
 //局部变量表的元素结构体
 //根据JVM规范，一位可以存int或引用值，连续2位可以存long或double值
 //方案1： []int + unsafe.Pointer 、拿内存地址 ————会被GC
@@ -7,5 +9,5 @@ package rtdata
 //方案3： 结构体存整数和引用
 type Slot struct {
 	num int32 
-	ref *Object
+	ref *heap.Object
 }
