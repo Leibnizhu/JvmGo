@@ -48,18 +48,22 @@ func (self *ClassMember) Class() *Class {
 	return self.class
 }
 
-// jvms 5.4.4
+// 类成员是否可访问
 func (self *ClassMember) isAccessibleTo(d *Class) bool {
+	//public的话任何类都可以访问
 	if self.IsPublic() {
 		return true
 	}
 	c := self.class
+	//protected的话，同一类、子类、及同包类可以访问
 	if self.IsProtected() {
 		return d == c || d.isSubClassOf(c) ||
 			c.getPackageName() == d.getPackageName()
 	}
+	//默认访问权限，同包类可以访问
 	if !self.IsPrivate() {
 		return c.getPackageName() == d.getPackageName()
 	}
+	//private，当前类才可以访问
 	return d == c
 }

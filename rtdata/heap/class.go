@@ -1,6 +1,7 @@
 package heap
 
 import "jvmgo/classfile"
+import "strings"
 
 type Class struct {
 	accessFlags       uint16 //访问修饰
@@ -65,7 +66,8 @@ func (self *Class) StaticVars() Slots {
 	return self.staticVars
 }
 
-// jvms 5.4.4
+// 当前类是否可被参数的类访问
+//要么时public，要么是同运行时包
 func (self *Class) isAccessibleTo(other *Class) bool {
 	return self.IsPublic() ||
 		self.getPackageName() == other.getPackageName()
