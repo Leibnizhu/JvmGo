@@ -105,7 +105,7 @@ func calcInstanceFieldSlotIds(class *Class) {
 	}
 	for _, field := range class.fields {
 		if !field.IsStatic() { //只计算非静态的实例字段
-			field.slotId = slotId
+			field.slotId = slotId //顺便给字段的slotId编号赋值
 			slotId++
 			if field.isLongOrDouble() { //long和double占用2个位置
 				slotId++
@@ -120,7 +120,7 @@ func calcStaticFieldSlotIds(class *Class) {
 	slotId := uint(0)
 	for _, field := range class.fields {
 		if field.IsStatic() {
-			field.slotId = slotId
+			field.slotId = slotId //顺便给字段的slotId编号赋值
 			slotId++
 			if field.isLongOrDouble() {
 				slotId++
