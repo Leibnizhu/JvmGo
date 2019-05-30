@@ -1,19 +1,23 @@
 package rtdata
 
+import "jvmgo/rtdata/heap"
+
 //栈帧
 type Frame struct {
 	lower        *Frame //下一个栈帧的指针
 	localVars    LocalVars //本地变量表的指针
 	operandStack *OperandStack //操作数栈的指针
 	thread       *Thread //当前线程
+	method       *heap.Method //当前方法
 	nextPC       int //下一个指令地址
 }
 
-func newFrame(thread *Thread, maxLocals, maxStack uint) *Frame {
+func newFrame(thread *Thread, method *heap.Method) *Frame {
 	return &Frame{
 		thread: thread,
-		localVars:    newLocalVars(maxLocals),
-		operandStack: newOperandStack(maxStack),
+		method: method,
+		localVars:    newLocalVars(method.MaxLocals()),
+		operandStack: newOperandStack(method.MaxStack()),
 	}
 }
 
@@ -27,6 +31,10 @@ func (self *Frame) OperandStack() *OperandStack {
 
 func (self *Frame) Thread() *Thread {
 	return self.thread
+}
+
+func (self *Frame) Method() *heap.Method {
+	return self.method
 }
 
 func (self *Frame) NextPC() int {
