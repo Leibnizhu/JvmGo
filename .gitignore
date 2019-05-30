@@ -19,3 +19,5 @@ mapred-site.xml
 .settings/
 .project
 #.vscode
+*.class
+*.java

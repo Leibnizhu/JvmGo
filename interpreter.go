@@ -1,23 +1,18 @@
 package main
 
 import "fmt"
-import "jvmgo/classfile"
 import "jvmgo/instruction"
 import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
+import "jvmgo/rtdata/heap"
 //解释器
 
-func interpret(methodInfo *classfile.MemberInfo) {
-	codeAttr := methodInfo.CodeAttribute()
-	maxLocals := codeAttr.MaxLocals()
-	maxStack := codeAttr.MaxStack()
-	bytecode := codeAttr.Code()
-
+func interpret(method *heap.Method) {
 	thread := rtdata.NewThread() //新建线程
-	frame := thread.NewFrame(maxLocals, maxStack) //新建线程栈帧
+	frame := thread.NewFrame(method) //新建线程栈帧
 	thread.PushFrame(frame) //栈帧入栈
 	defer catchErr(frame) //return 诗回调
-	loop(thread, bytecode)
+	loop(thread, method.Code())
 }
 
 func catchErr(frame *rtdata.Frame) {
