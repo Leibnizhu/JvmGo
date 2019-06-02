@@ -42,7 +42,7 @@ func (self *INVOKE_SPECIAL) Execute(frame *rtdata.Frame) {
 	if currentClass.IsSuper() &&
 		resolvedClass.IsSuperClassOf(currentClass) && //的确是调用了父类
 		resolvedMethod.Name() != "<init>" {
-		methodToBeInvoked = heap.LookupMethodInClass(currentClass.SuperClass(), methodRef.Name(), methodRef.Descriptor()）
+		methodToBeInvoked = heap.LookupMethodInClass(currentClass.SuperClass(), methodRef.Name(), methodRef.Descriptor())
 	}
 
 	//找不到方法，或者方法为抽象方法

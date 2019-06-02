@@ -22,5 +22,5 @@ func (self *Object) Fields() Slots {
 
 //instanceof
 func (self *Object) IsInstanceOf(class *Class) bool {
-	return class.isAssignableFrom(self.class) //在 rtdata/heap/classHierarchy.go 中
+	return class.IsAssignableFrom(self.class) //在 rtdata/heap/classHierarchy.go 中
 }

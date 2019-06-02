@@ -46,7 +46,7 @@ func (self *INVOKE_VIRTUAL) Execute(frame *rtdata.Frame) {
 }
 
 
-func _println(stack *rtda.OperandStack, descriptor string) {
+func _println(stack *rtdata.OperandStack, descriptor string) {
 	switch descriptor {
 	case "(Z)V":
 		fmt.Printf("%v\n", stack.PopInt() != 0)

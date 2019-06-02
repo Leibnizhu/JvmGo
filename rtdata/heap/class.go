@@ -17,6 +17,7 @@ type Class struct {
 	instanceSlotCount uint //实例变量占空间大小
 	staticSlotCount   uint //类变量占空间大小
 	staticVars        Slots //静态变量
+	initStarted       bool
 }
 
 //ClassFile 对象转 Class对象
@@ -65,16 +66,36 @@ func (self *Class) ConstantPool() *ConstantPool {
 func (self *Class) StaticVars() Slots {
 	return self.staticVars
 }
+func (self *Class) Name() string {
+	return self.name
+}
+func (self *Class) Fields() []*Field {
+	return self.fields
+}
+func (self *Class) Methods() []*Method {
+	return self.methods
+}
+func (self *Class) SuperClass() *Class {
+	return self.superClass
+}
+
+func (self *Class) InitStarted() bool {
+	return self.initStarted
+}
+
+func (self *Class) StartInit() {
+	self.initStarted = true
+}
 
 // 当前类是否可被参数的类访问
 //要么时public，要么是同运行时包
 func (self *Class) isAccessibleTo(other *Class) bool {
 	return self.IsPublic() ||
-		self.getPackageName() == other.getPackageName()
+		self.GetPackageName() == other.GetPackageName()
 }
 
 //包名，即类名前面所有字符
-func (self *Class) getPackageName() string {
+func (self *Class) GetPackageName() string {
 	if i := strings.LastIndex(self.name, "/"); i >= 0 {
 		return self.name[:i]
 	}
@@ -84,6 +105,9 @@ func (self *Class) getPackageName() string {
 //main() 入口方法
 func (self *Class) GetMainMethod() *Method {
 	return self.getStaticMethod("main", "([Ljava/lang/String;)V")
+}
+func (self *Class) GetClinitMethod() *Method {
+	return self.getStaticMethod("<clinit>", "()V")
 }
 
 //获取静态方法的方法
