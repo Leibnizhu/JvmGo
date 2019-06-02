@@ -33,6 +33,10 @@ func (self *Thread) CurrentFrame() *Frame {
 	return self.stack.top() //只是看看栈顶，不能pop出来
 }
 
+func (self *Thread) TopFrame() *Frame {
+	return self.stack.top() //只是看看栈顶，不能pop出来
+}
+
 func (self *Thread) NewFrame(method *heap.Method) *Frame {
 	return newFrame(self, method)
 }
