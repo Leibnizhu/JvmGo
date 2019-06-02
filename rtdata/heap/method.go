@@ -1,4 +1,4 @@
-package heap
+	package heap
 
 import "jvmgo/classfile"
 
@@ -7,6 +7,7 @@ type Method struct {
 	maxStack  uint //操作栈大小
 	maxLocals uint //局部变量表大小
 	code      []byte //字节码
+	argSlotCount uint //方法的参数的slot数
 }
 
 //从 class文件 解析 Method对象
@@ -17,6 +18,7 @@ func newMethods(class *Class, cfMethods []*classfile.MemberInfo) []*Method {
 		methods[i].class = class
 		methods[i].copyMemberInfo(cfMethod)
 		methods[i].copyAttributes(cfMethod)
+		methods[i].calcArgSlotCount() //计算方法的参数slot数
 	}
 	return methods
 }
@@ -27,6 +29,19 @@ func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) {
 		self.maxStack = codeAttr.MaxStack()
 		self.maxLocals = codeAttr.MaxLocals()
 		self.code = codeAttr.Code()
+	}
+}
+
+func (self *Method) calcArgSlotCount() {
+	parsedDescriptor := parseMethodDescriptor(self.descriptor) //解析方法描述符，返回MethodDescriptor实例
+	for _,paramType  := range parsedDescriptor.parameterTypes { //遍历方法的所有参数类型
+		self.argSlotCount++
+		if paramType == "J" || paramType == "D" { //long和doubel类型占两个
+			self.argSlotCount++
+		}
+	}
+	if !self.IsStatic() { //非静态方法还有个this引用作为第一个参数
+		self.argSlotCount++
 	}
 }
 
@@ -59,4 +74,7 @@ func (self *Method) MaxLocals() uint {
 }
 func (self *Method) Code() []byte {
 	return self.code
+}
+func (self *Method) ArgSlotCount() uint {
+	return self.argSlotCount
 }
