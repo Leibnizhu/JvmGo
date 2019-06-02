@@ -48,7 +48,7 @@ func (self *ClassMember) Class() *Class {
 	return self.class
 }
 
-// 类成员是否可访问
+// 类成员（字段/属性、方法等）是否可访问
 func (self *ClassMember) isAccessibleTo(d *Class) bool {
 	//public的话任何类都可以访问
 	if self.IsPublic() {
