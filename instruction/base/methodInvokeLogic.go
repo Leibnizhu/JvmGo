@@ -21,9 +21,9 @@ func InvokeMethod(invokerFrame *rtdata.Frame, method *heap.Method) {
 
 	// 本地方法的临时处理
 	if method.IsNative() {
-		if method.Name() == "registerNatives" {
+		if method.Name() == "registerNatives" { //跳过registerNatives()方法，目前还无法处理
 			thread.PopFrame()
-		} else {
+		} else { //其他本地方法更不支持了
 			panic(fmt.Sprintf("native method: %v.%v%v\n",
 				method.Class().Name(), method.Name(), method.Descriptor()))
 		}

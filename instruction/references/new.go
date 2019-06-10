@@ -12,7 +12,12 @@ func (self *NEW) Execute(frame *rtdata.Frame) {
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(self.Index).(*heap.ClassRef) //从常量池找到一个类符号引用
 	class := classRef.ResolvedClass() //拿到类数据，可能会加载
-	// todo: init class
+	// init class
+	if !class.InitStarted() {
+		frame.RevertNextPC()
+		base.InitClass(frame.Thread(), class)
+		return
+	}
 
 	if class.IsInterface() || class.IsAbstract() { //抽象类和接口无法实例化
 		panic("java.lang.InstantiationError") //JVM规范规定的异常

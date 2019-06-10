@@ -13,7 +13,12 @@ func (self *GET_STATIC) Execute(frame *rtdata.Frame) {
 	fieldRef := cp.GetConstant(self.Index).(*heap.FieldRef) //从常量池读取字段引用
 	field := fieldRef.ResolvedField() //解析静态字段引用
 	class := field.Class() //静态字段对应的类的对象
-	// todo: 如果声明字段的类还没初始化，需要初始化
+	// 如果声明字段的类未初始化，需要初始化
+	if !class.InitStarted() {
+		frame.RevertNextPC()
+		base.InitClass(frame.Thread(), class)
+		return
+	}
 
 	if !field.IsStatic() { //非静态字段无法读取
 		panic("java.lang.IncompatibleClassChangeError")

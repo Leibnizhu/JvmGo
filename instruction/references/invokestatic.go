@@ -17,7 +17,7 @@ func (self *INVOKE_STATIC) Execute(frame *rtdata.Frame) {
 
 	class := resolvedMethod.Class()
 	if !class.InitStarted() {
-		frame.RevertNextPC()
+		frame.RevertNextPC() //由于类没初始化的时候要去初始化，指令已经执行一部分，所以回退指令，再进来的时候继续执行
 		base.InitClass(frame.Thread(), class)
 		return
 	}
