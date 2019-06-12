@@ -28,7 +28,27 @@ func (self *ClassLoader) LoadClass(name string) *Class {
 	if class, ok := self.classMap[name]; ok { //尝试从已加载的里面查
 		return class
 	}
+	if name[0] == '[' { //数组类型
+		return self.loadArrayClass(name)
+	}
 	return self.loadNonArrayClass(name) //map中没有的话，加载（暂不考虑数组类）
+}
+
+//加载数组类，主要是一些数组类相关的特殊固有属性
+func (self *ClassLoader) loadArrayClass(name string) *Class {
+	class := &Class{
+		accessFlags: ACC_PUBLIC, //TODO 
+		name: name,
+		loader: self,
+		initStarted: true, //数组类不需要初始化
+		superClass: self.LoadClass("java/lang/Object"),
+		interfaces: []*Class{
+			self.LoadClass("java/lang/Cloneable"),
+			self.LoadClass("java/io/Serializable"),
+		},
+	}
+	self.classMap[name] = class
+	return class
 }
 
 func (self *ClassLoader) loadNonArrayClass(name string) *Class {

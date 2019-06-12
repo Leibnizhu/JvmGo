@@ -78,6 +78,9 @@ func (self *Class) Methods() []*Method {
 func (self *Class) SuperClass() *Class {
 	return self.superClass
 }
+func (self *Class) Loader() *ClassLoader {
+	return self.loader
+}
 
 func (self *Class) InitStarted() bool {
 	return self.initStarted
@@ -125,4 +128,10 @@ func (self *Class) getStaticMethod(name, descriptor string) *Method {
 
 func (self *Class) NewObject() *Object {
 	return newObject(self)
+}
+
+//返回与类相应的数组类
+func (self *Class) ArrayClass() *Class {
+	arrayClassName := getArrayClassName(self.name) //根据类名得到数组名
+	return self.loader.LoadClass(arrayClassName)
 }

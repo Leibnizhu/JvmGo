@@ -2,13 +2,13 @@ package heap
 
 type Object struct {
 	class  *Class
-	fields Slots
+	data interface{} //类似C语言的void*，可以接受任何类型的值
 }
 
 func newObject(class *Class) *Object {
 	return &Object{
 		class:  class,
-		fields: newSlots(class.instanceSlotCount), //实例字段空间分配
+		data: newSlots(class.instanceSlotCount), //实例字段空间分配
 	}
 }
 
@@ -17,7 +17,7 @@ func (self *Object) Class() *Class {
 	return self.class
 }
 func (self *Object) Fields() Slots {
-	return self.fields
+	return self.data.(Slots)
 }
 
 //instanceof
