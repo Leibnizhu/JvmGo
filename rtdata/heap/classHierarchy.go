@@ -8,12 +8,36 @@ func (self *Class) IsAssignableFrom(other *Class) bool {
 	if s == t { //同一个类，必然true
 		return true
 	}
-
-	if !t.IsInterface() { //self是类
-		return s.IsSubClassOf(t) //判断other是self的子类
-	} else { //self是接口
-		return s.IsImplements(t) //判断other实现了self接口
+	
+	if !s.IsArray() { //other不是数组
+		if !s.IsInterface() { //other不是接口
+			if !t.IsInterface() { //self不是接口
+				return s.IsSubClassOf(t) //other是self子类
+			} else { //self是接口
+				return s.IsImplements(t) //other实现了self接口
+			}
+		} else { //other是接口
+			if !t.IsInterface() { //self不是接口
+				return t.isJlObject() 
+			} else { //self是接口
+				return t.isSuperInterfaceOf(s)
+			}
+		}
+	} else { //other是数组
+		if !t.IsArray() { //self不是数组但other是数组，要么self是Object，要么是数组实现了的Cloneable和Serializable接口
+			if !t.IsInterface() { //self不是接口
+				return t.isJlObject()
+			} else { //self是接口
+				return t.isJlCloneable() || t.isJioSerializable()
+			}
+		} else { //self和other都是数组,拿出元素类型对比
+			sc := s.ComponentClass()
+			tc := t.ComponentClass()
+			return sc == tc || tc.IsAssignableFrom(sc)
+		}
 	}
+
+	return false;
 }
 
 // 判断self是other的子类
@@ -51,4 +75,9 @@ func (self *Class) IsSubInterfaceOf(iface *Class) bool {
 // c extends self
 func (self *Class) IsSuperClassOf(other *Class) bool {
 	return other.IsSubClassOf(self)
+}
+
+// iface extends self
+func (self *Class) isSuperInterfaceOf(iface *Class) bool {
+	return iface.IsSubInterfaceOf(self)
 }

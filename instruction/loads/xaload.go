@@ -24,7 +24,7 @@ func (self *AALOAD) Execute(frame *rtdata.Frame) {
 // 读取 byte 或 boolean
 type BALOAD struct{ base.NoOperandsInstruction }
 
-func (self *BALOAD) Execute(frame *rtda.Frame) {
+func (self *BALOAD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -38,7 +38,7 @@ func (self *BALOAD) Execute(frame *rtda.Frame) {
 // 读取 char
 type CALOAD struct{ base.NoOperandsInstruction }
 
-func (self *CALOAD) Execute(frame *rtda.Frame) {
+func (self *CALOAD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -52,7 +52,7 @@ func (self *CALOAD) Execute(frame *rtda.Frame) {
 // 读取 double 
 type DALOAD struct{ base.NoOperandsInstruction }
 
-func (self *DALOAD) Execute(frame *rtda.Frame) {
+func (self *DALOAD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -66,7 +66,7 @@ func (self *DALOAD) Execute(frame *rtda.Frame) {
 // 读取 float
 type FALOAD struct{ base.NoOperandsInstruction }
 
-func (self *FALOAD) Execute(frame *rtda.Frame) {
+func (self *FALOAD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -80,7 +80,7 @@ func (self *FALOAD) Execute(frame *rtda.Frame) {
 // 读取 int
 type IALOAD struct{ base.NoOperandsInstruction }
 
-func (self *IALOAD) Execute(frame *rtda.Frame) {
+func (self *IALOAD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -94,7 +94,7 @@ func (self *IALOAD) Execute(frame *rtda.Frame) {
 // 读取 long
 type LALOAD struct{ base.NoOperandsInstruction }
 
-func (self *LALOAD) Execute(frame *rtda.Frame) {
+func (self *LALOAD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -108,7 +108,7 @@ func (self *LALOAD) Execute(frame *rtda.Frame) {
 // 读取 short 
 type SALOAD struct{ base.NoOperandsInstruction }
 
-func (self *SALOAD) Execute(frame *rtda.Frame) {
+func (self *SALOAD) Execute(frame *rtdata.Frame) {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
