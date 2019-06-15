@@ -8,12 +8,24 @@ import "jvmgo/rtdata/heap"
 //解释器
 
 //logInst : 是否打印执行信息到控制台
-func interpret(method *heap.Method, logInst bool) {
+func interpret(method *heap.Method, logInst bool, args []string) {
 	thread := rtdata.NewThread() //新建线程
 	frame := thread.NewFrame(method) //新建线程栈帧
 	thread.PushFrame(frame) //栈帧入栈
+	jArg := createArgsArray(method.Class().Loader(), args) //根据启动参数生成字符串数组
+	frame.LocalVars().SetRef(0, jArg) //启动参数放入操作数栈顶
 	defer catchErr(thread) //return 诗回调
 	loop(thread, logInst)
+}
+
+func createArgsArray(loader *heap.ClassLoader, args []string) *heap.Object {
+	stringClass := loader.LoadClass("java/lang/String")
+	argsArr := stringClass.ArrayClass().NewArray(uint(len(args)))
+	jArgs := argsArr.Refs()
+	for i, arg := range args {
+		jArgs[i] = heap.JString(loader, arg)
+	}
+	return argsArr
 }
 
 func catchErr(thread *rtdata.Thread) {

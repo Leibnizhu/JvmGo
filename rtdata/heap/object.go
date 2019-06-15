@@ -24,3 +24,16 @@ func (self *Object) Fields() Slots {
 func (self *Object) IsInstanceOf(class *Class) bool {
 	return class.IsAssignableFrom(self.class) //在 rtdata/heap/classHierarchy.go 中
 }
+
+//获取对象的引用类型实例变量
+func (self *Object) GetRefVar(name, descriptor string) *Object {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	return slots.GetRef(field.slotId)
+}
+//给对象的引用类型实例变量赋值
+func (self *Object) SetRefVar(name, descriptor string, ref *Object) {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	slots.SetRef(field.slotId, ref)
+}

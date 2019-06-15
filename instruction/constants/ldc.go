@@ -2,6 +2,7 @@ package constants
 
 import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
+import "jvmgo/rtdata/heap"
 //LDC系列指令，从常量池读取常量值，并推入ca操作数栈
 
 //加载int float 字符串常量 Class实例
@@ -21,8 +22,8 @@ func (self *LDC_W) Execute(frame *rtdata.Frame) {
 //LDC 和 LDC_W 实际逻辑
 func _ldc(frame *rtdata.Frame, index uint) {
 	stack := frame.OperandStack()
-	cp := frame.Method().Class().ConstantPool()
-	c := cp.GetConstant(index) //从当前类的常量池获取常量
+	class := frame.Method().Class()
+	c := class.ConstantPool().GetConstant(index) //从当前类的常量池获取常量
 
 	switch c.(type) {
 	//如果是int或float，入栈
@@ -30,7 +31,9 @@ func _ldc(frame *rtdata.Frame, index uint) {
 		stack.PushInt(c.(int32))
 	case float32:
 		stack.PushFloat(c.(float32))
-	// case string:
+	case string:
+		internedStr := heap.JString(class.Loader(), c.(string))
+		stack.PushRef(internedStr)
 	// case *heap.ClassRef:
 	// case MethodType, MethodHandle
 	default: //其他暂不支持

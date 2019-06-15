@@ -186,7 +186,9 @@ func initStaticFinalVar(class *Class, field *Field) {
 			val := cp.GetConstant(cpIndex).(float64)
 			vars.SetDouble(slotId, val)
 		case "Ljava/lang/String;":
-			panic("todo")
+			goStr := cp.GetConstant(cpIndex).(string) //从常量池拿go字符串
+			jStr := JString(class.Loader(), goStr) //从字符串池拿java字符串
+			vars.SetRef(slotId, jStr) //slot赋值
 		}
 	}
 }
