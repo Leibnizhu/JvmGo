@@ -18,6 +18,7 @@ type Class struct {
 	staticSlotCount   uint //类变量占空间大小
 	staticVars        Slots //静态变量
 	initStarted       bool //类是否已初始化，即<clinit>是否已经执行
+	jClass            *Object //java.lang.Class实例
 }
 
 //ClassFile 对象转 Class对象

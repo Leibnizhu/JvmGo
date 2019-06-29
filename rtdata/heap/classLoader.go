@@ -17,21 +17,60 @@ type ClassLoader struct {
 }
 
 func NewClassLoader(cp *classpath.Classpath, verboseFlag bool) *ClassLoader {
-	return &ClassLoader{
+	loader := &ClassLoader{
 		cp:       cp,
 		verboseFlag: verboseFlag,
 		classMap: make(map[string]*Class),
 	}
+	loader.loadBasicClasses()
+	loader.loadPrimitiveClasses()
+	return loader
+}
+
+func (self *ClassLoader) loadBasicClasses() {
+	jlClassClass := self.LoadClass("java/lang/Class") //加载最基础的java.lang.Class类，会触发Object等类和接口的加载
+	for _,class := range self.classMap { //随后遍历已经加载的类，extra关联类对象
+		if class.jClass == nil {
+			class.jClass = jlClassClass.NewObject() //Class实例
+			class.jClass.extra = class //绑定当前go的class对象
+		}
+	}
+}
+
+func (self *ClassLoader) loadPrimitiveClasses() {
+	for primitiveType,_ := range primitiveTypes { //遍历加载基础类型，包括void
+		self.loadPrimitiveClass(primitiveType) //基础类型的类名就是诸如 void int long等，没有超类也没实现其他接口
+		//基础类型的类对象编译后是通过getstatic获取的，因为基础类型的包装类中有个静态常量TYPE存储基础类型的类
+	} 
+}
+
+func (self *ClassLoader) loadPrimitiveClass(className string) {
+	class := &Class{
+		accessFlags: ACC_PUBLIC,
+		name: className,
+		loader: self,
+		initStarted: true,
+	}
+	class.jClass = self.classMap["java/lang/Class"].NewObject()
+	class.jClass.extra = class
+	self.classMap[className] = class //放入Hash表
 }
 
 func (self *ClassLoader) LoadClass(name string) *Class {
 	if class, ok := self.classMap[name]; ok { //尝试从已加载的里面查
 		return class
 	}
+	var class *Class
 	if name[0] == '[' { //数组类型
-		return self.loadArrayClass(name)
+		class = self.loadArrayClass(name)
+	} else {
+		class = self.loadNonArrayClass(name) //map中没有的话，加载（暂不考虑数组类）
 	}
-	return self.loadNonArrayClass(name) //map中没有的话，加载（暂不考虑数组类）
+	if jlClassClass, ok := self.classMap["java/lang/Class"]; ok { //如果Class类已经加载，则要给新类关联class对象
+		class.jClass = jlClassClass.NewObject() //Class实例
+		class.jClass.extra = class //绑定当前go的class对象
+	}
+	return class
 }
 
 //加载数组类，主要是一些数组类相关的特殊固有属性
