@@ -82,6 +82,9 @@ func (self *Class) SuperClass() *Class {
 func (self *Class) Loader() *ClassLoader {
 	return self.loader
 }
+func (self *Class) JClass() *Object {
+	return self.jClass
+}
 
 func (self *Class) InitStarted() bool {
 	return self.initStarted

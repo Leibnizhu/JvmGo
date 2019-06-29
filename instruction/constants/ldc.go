@@ -34,7 +34,10 @@ func _ldc(frame *rtdata.Frame, index uint) {
 	case string:
 		internedStr := heap.JString(class.Loader(), c.(string))
 		stack.PushRef(internedStr)
-	// case *heap.ClassRef:
+	case *heap.ClassRef: //类引用，则解析类引用，并推入操作数栈顶
+		classRef := c.(*heap.ClassRef)
+		classObj := classRef.ResolvedClass().JClass()
+		stack.PushRef(classObj)
 	// case MethodType, MethodHandle
 	default: //其他暂不支持
 		panic("todo: ldc!")
