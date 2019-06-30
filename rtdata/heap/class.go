@@ -177,3 +177,12 @@ func (self *Class) getField(name, descriptor string, isStatic bool) *Field {
 	}
 	return nil
 }
+
+func (self *Class) JavaName() string {
+	return strings.Replace(self.name, "/", ".", -1) //将类名的/替换成.,就得到Class.getName()需要的类名
+}
+
+func (self *Class) IsPrimitive() bool {
+	_, ok := primitiveTypes[self.name]
+	return ok
+}

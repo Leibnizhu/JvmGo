@@ -12,6 +12,7 @@ import . "jvmgo/instruction/math"
 import . "jvmgo/instruction/stack"
 import . "jvmgo/instruction/stores"
 import . "jvmgo/instruction/references"
+import . "jvmgo/instruction/reserved"
 
 // 没有操作数的指令的单例们
 var (
