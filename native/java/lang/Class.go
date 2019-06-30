@@ -5,12 +5,14 @@ import "jvmgo/native"
 import "jvmgo/rtdata"
 import "jvmgo/rtdata/heap"
 
+const jlClass = "java/lang/Class"
+
 func init() {
-	native.Register("java/lang/Class", "getPrimitiveClass", "(Ljava/lang/String;)Ljava/lang/Class;", getPrimitiveClass)
-	native.Register("java/lang/Class", "getName0", "()Ljava/lang/String;", getName0)
-	native.Register("java/lang/Class", "desiredAssertionStatus0", "(Ljava/lang/Class;)Z;", desiredAssertionStatus0)
-	native.Register("java/lang/Class", "isInterface", "()Z", isInterface)
-	native.Register("java/lang/Class", "isPrimitive", "()Z", isPrimitive)
+	native.Register(jlClass, "getPrimitiveClass", "(Ljava/lang/String;)Ljava/lang/Class;", getPrimitiveClass)
+	native.Register(jlClass, "getName0", "()Ljava/lang/String;", getName0)
+	native.Register(jlClass, "desiredAssertionStatus0", "(Ljava/lang/Class;)Z", desiredAssertionStatus0)
+	native.Register(jlClass, "isInterface", "()Z", isInterface)
+	native.Register(jlClass, "isPrimitive", "()Z", isPrimitive)
 }
 //对应 static native Class<?> getPrimitiveClass(String name);
 func getPrimitiveClass(frame *rtdata.Frame) {

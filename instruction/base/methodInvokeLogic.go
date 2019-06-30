@@ -1,6 +1,5 @@
 package base
 
-import "fmt"
 import "jvmgo/rtdata"
 import "jvmgo/rtdata/heap"
 
@@ -16,16 +15,6 @@ func InvokeMethod(invokerFrame *rtdata.Frame, method *heap.Method) {
 			 //从操作数栈出栈参数，入栈新栈帧的本地变量表
 			slot := invokerFrame.OperandStack().PopSlot()
 			newFrame.LocalVars().SetSlot(uint(i), slot)
-		}
-	}
-
-	// 本地方法的临时处理
-	if method.IsNative() {
-		if method.Name() == "registerNatives" { //跳过registerNatives()方法，目前还无法处理
-			thread.PopFrame()
-		} else { //其他本地方法更不支持了
-			panic(fmt.Sprintf("native method: %v.%v%v\n",
-				method.Class().Name(), method.Name(), method.Descriptor()))
 		}
 	}
 }

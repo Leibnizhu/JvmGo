@@ -21,6 +21,15 @@
             "mode": "debug",
             "program": "${env:GOPATH}/src/jvmgo/main.go",
             "args": ["java.lang.String"]
+        },
+        {
+            "name": "GetClassTest",
+            "type": "go",
+            // "showLog": true,
+            "request": "launch",
+            "mode": "debug",
+            "program": "${env:GOPATH}/src/jvmgo/main.go",
+            "args": ["GetClassTest"]
         }
     ]
 }
