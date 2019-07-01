@@ -9,6 +9,7 @@ const jlObject = "java/lang/Object"
 func init(){
 	native.Register(jlObject, "getClass", "()Ljava/lang/Class;", getClass)
 	native.Register(jlObject, "hashCode", "()I", hashCode)
+	native.Register(jlObject, "clone", "()Ljava/lang/Object;", clone)
 }
 
 //对应  public final native Class<?> getClass() 方法
@@ -25,3 +26,12 @@ func hashCode(frame *rtdata.Frame) {
 	frame.OperandStack().PushInt(hash)
 }
 
+//对应 protected native Object clone() throws CloneNotSupportedException;
+func clone(frame *rtdata.Frame) {
+	this := frame.LocalVars().GetThis()
+	cloneable := this.Class().Loader().LoadClass("java/lang/Cloneable")
+	if !this.Class().IsImplements(cloneable) { //this引用对应的对象类未实现Cloneable接口
+		panic("java.lang.CloneNotSupportedException")
+	}
+	frame.OperandStack().PushRef(this.Clone())
+}
