@@ -1,13 +1,14 @@
-	package heap
+package heap
 
 import "jvmgo/classfile"
 
 type Method struct {
 	ClassMember
-	maxStack  uint //操作栈大小
-	maxLocals uint //局部变量表大小
-	code      []byte //字节码
-	argSlotCount uint //方法的参数的slot数
+	maxStack       uint           //操作栈大小
+	maxLocals      uint           //局部变量表大小
+	code           []byte         //字节码
+	argSlotCount   uint           //方法的参数的slot数
+	exceptionTable ExceptionTable //异常处理表
 }
 
 //从 class文件 解析 Method对象
@@ -26,7 +27,7 @@ func newMethod(class *Class, cfMethod *classfile.MemberInfo) *Method {
 	method.copyAttributes(cfMethod)
 	md := parseMethodDescriptor(method.descriptor)
 	method.calcArgSlotCount(md.parameterTypes) //计算方法的参数slot数
-	if method.IsNative() { //本地方法需要注入字节码和其他信息
+	if method.IsNative() {                     //本地方法需要注入字节码和其他信息
 		method.injectCodeAttribute(md.returnType)
 	}
 	return method
@@ -38,11 +39,13 @@ func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) {
 		self.maxStack = codeAttr.MaxStack()
 		self.maxLocals = codeAttr.MaxLocals()
 		self.code = codeAttr.Code()
+		self.exceptionTable = newExceptionTable(codeAttr.ExceptionTable(),
+			self.class.constantPool)
 	}
 }
 
 func (self *Method) calcArgSlotCount(paramTypes []string) {
-	for _,paramType  := range paramTypes { //遍历方法的所有参数类型
+	for _, paramType := range paramTypes { //遍历方法的所有参数类型
 		self.argSlotCount++
 		if paramType == "J" || paramType == "D" { //long和doubel类型占两个
 			self.argSlotCount++
@@ -54,9 +57,9 @@ func (self *Method) calcArgSlotCount(paramTypes []string) {
 }
 
 func (self *Method) injectCodeAttribute(returnType string) {
-	self.maxStack = 4 // =操作数栈至少要能放下返回值，所以暂且设为4
+	self.maxStack = 4                  // =操作数栈至少要能放下返回值，所以暂且设为4
 	self.maxLocals = self.argSlotCount //本地方法帧的局部变量表只存放参数值，所以用argSlotCount即可
-	switch returnType[0] { //根据返回值类型选择相应的返回指令
+	switch returnType[0] {             //根据返回值类型选择相应的返回指令
 	case 'V':
 		self.code = []byte{0xfe, 0xb1} // return
 	case 'L', '[':
@@ -104,4 +107,13 @@ func (self *Method) Code() []byte {
 }
 func (self *Method) ArgSlotCount() uint {
 	return self.argSlotCount
+}
+
+//根据异常类和抛异常的位置查找异常处理表
+func (self *Method) FindExceptionHandler(exClass *Class, pc int) int {
+	handler := self.exceptionTable.findExceptionHandler(exClass, pc)
+	if handler != nil {
+		return handler.handlerPc //找到则返回对应的处理代码位置
+	}
+	return -1 //找不到则返回-1
 }

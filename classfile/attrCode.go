@@ -52,17 +52,16 @@ func (self *CodeAttribute) ExceptionTable() []*ExceptionTableEntry {
 }
 
 //异常处理表相关代码
-
 type ExceptionTableEntry struct {
 	startPc   uint16
 	endPc     uint16
 	handlerPc uint16
-	catchType uint16 //捕获类型
+	catchType uint16 //捕获类型的索引
 }
 
 //读取异常处理表
 func readExceptionTable(reader *ClassReader) []*ExceptionTableEntry {
-	exceptionTableLength := reader.readUint16() //异常处理表长度
+	exceptionTableLength := reader.readUint16()                          //异常处理表长度
 	exceptionTable := make([]*ExceptionTableEntry, exceptionTableLength) //初始化异常处理表数组
 	for i := range exceptionTable {
 		exceptionTable[i] = &ExceptionTableEntry{

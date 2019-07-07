@@ -5,7 +5,7 @@ import "jvmgo/rtdata/heap"
 
 //操作数栈
 type OperandStack struct {
-	size  uint //栈大小，编译器确定
+	size  uint   //栈大小，编译器确定
 	slots []Slot //由于大小确定，可以用数组实现
 }
 
@@ -94,4 +94,12 @@ func (self *OperandStack) PushBoolean(val bool) {
 }
 func (self *OperandStack) PopBoolean() bool {
 	return self.PopInt() == 1
+}
+
+//清理操作数栈
+func (self *OperandStack) Clear() {
+	self.size = 0
+	for i := range self.slots {
+		self.slots[i].ref = nil
+	}
 }

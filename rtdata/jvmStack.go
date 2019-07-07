@@ -2,8 +2,8 @@ package rtdata
 
 // jvm 栈， 链表结构
 type Stack struct {
-	maxSize uint //最大栈帧容量
-	size    uint //当前大小
+	maxSize uint   //最大栈帧容量
+	size    uint   //当前大小
 	_top    *Frame //栈顶指针
 }
 
@@ -46,4 +46,11 @@ func (self *Stack) top() *Frame {
 
 func (self *Stack) isEmpty() bool {
 	return self._top == nil
+}
+
+//清空
+func (self *Stack) clear() {
+	for !self.isEmpty() {
+		self.pop()
+	}
 }

@@ -3,7 +3,7 @@ package rtdata
 import "jvmgo/rtdata/heap"
 
 type Thread struct {
-	pc int //程序计数器
+	pc    int    //程序计数器
 	stack *Stack //JVM栈指针
 }
 
@@ -43,4 +43,9 @@ func (self *Thread) NewFrame(method *heap.Method) *Frame {
 
 func (self *Thread) IsStackEmpty() bool {
 	return self.stack.isEmpty()
+}
+
+//清空栈
+func (self *Thread) ClearStack() {
+	self.stack.clear()
 }
