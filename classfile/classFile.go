@@ -1,27 +1,29 @@
 package classfile
+
 import "fmt"
 import "strconv"
+
 //class文件对应的struct
 type ClassFile struct {
-	magic uint32 //魔数 CAFE BABE
-	minorVersion uint16 //小版本
-	majorVersion uint16 //大版本
-	constantPool ConstantPool //常量池
-	accessFlags uint16 //类访问标志， private/public等
-	thisClass uint16 //当前类，指向常量池
-	superClass uint16 //父类，常量池指针
-	interfaces []uint16 //实现的多个接口 多个常量池指针
-	fields []*MemberInfo //类字段
-	methods []*MemberInfo //类方法
-	attributes []AttributeInfo //属性表
+	magic        uint32          //魔数 CAFE BABE
+	minorVersion uint16          //小版本
+	majorVersion uint16          //大版本
+	constantPool ConstantPool    //常量池
+	accessFlags  uint16          //类访问标志， private/public等
+	thisClass    uint16          //当前类，指向常量池
+	superClass   uint16          //父类，常量池指针
+	interfaces   []uint16        //实现的多个接口 多个常量池指针
+	fields       []*MemberInfo   //类字段
+	methods      []*MemberInfo   //类方法
+	attributes   []AttributeInfo //属性表
 }
 
 //解析class文件
 func Parse(classData []byte) (cf *ClassFile, err error) {
-	defer func () {
+	defer func() {
 		if r := recover(); r != nil {
 			var ok bool
-			err,ok = r.(error)
+			err, ok = r.(error)
 			if !ok {
 				err = fmt.Errorf("%v", r)
 			}
@@ -61,7 +63,7 @@ func (self *ClassFile) readAndCheckVersion(reader *ClassReader) {
 	switch self.majorVersion {
 	case 45: //对应JDK1.0.2-1.1, minorVersion有多个
 		return
-	case 46,47,48,49,50,51,52: //对应JDK1。2-8
+	case 46, 47, 48, 49, 50, 51, 52: //对应JDK1。2-8
 		if self.minorVersion == 0 {
 			return
 		}
@@ -110,8 +112,19 @@ func (self *ClassFile) SuperClassName() string {
 //从常量池查找接口名，interfaces只保存常量池指针
 func (self *ClassFile) InterfaceNames() []string {
 	interfaceNames := make([]string, len(self.interfaces)) //存储接口名的数组
-	for i, cpIndex := range self.interfaces { //遍历接口名的常量池指针
+	for i, cpIndex := range self.interfaces {              //遍历接口名的常量池指针
 		interfaceNames[i] = self.constantPool.getClassName(cpIndex)
 	}
 	return interfaceNames
+}
+
+//从class文件中获取对行号表
+func (self *ClassFile) SourceFileAttribute() *SourceFileAttribute {
+	for _, attrInfo := range self.attributes {
+		switch attrInfo.(type) {
+		case *SourceFileAttribute:
+			return attrInfo.(*SourceFileAttribute)
+		}
+	}
+	return nil
 }

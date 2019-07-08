@@ -4,11 +4,12 @@ import "jvmgo/classfile"
 
 type Method struct {
 	ClassMember
-	maxStack       uint           //操作栈大小
-	maxLocals      uint           //局部变量表大小
-	code           []byte         //字节码
-	argSlotCount   uint           //方法的参数的slot数
-	exceptionTable ExceptionTable //异常处理表
+	maxStack        uint                                //操作栈大小
+	maxLocals       uint                                //局部变量表大小
+	code            []byte                              //字节码
+	argSlotCount    uint                                //方法的参数的slot数
+	exceptionTable  ExceptionTable                      //异常处理表
+	lineNumberTable *classfile.LineNumberTableAttribute //源代码行数
 }
 
 //从 class文件 解析 Method对象
@@ -39,6 +40,7 @@ func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) {
 		self.maxStack = codeAttr.MaxStack()
 		self.maxLocals = codeAttr.MaxLocals()
 		self.code = codeAttr.Code()
+		self.lineNumberTable = codeAttr.LineNumberTableAttribute()
 		self.exceptionTable = newExceptionTable(codeAttr.ExceptionTable(),
 			self.class.constantPool)
 	}
@@ -116,4 +118,15 @@ func (self *Method) FindExceptionHandler(exClass *Class, pc int) int {
 		return handler.handlerPc //找到则返回对应的处理代码位置
 	}
 	return -1 //找不到则返回-1
+}
+
+//获取代码行号
+func (self *Method) GetLineNumber(pc int) int {
+	if self.IsNative() { //本地方法
+		return -2
+	}
+	if self.lineNumberTable == nil { //编译时通过参数控制不输出源代码行号
+		return -1
+	}
+	return self.lineNumberTable.GetLineNumber(pc)
 }

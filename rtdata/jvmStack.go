@@ -44,6 +44,15 @@ func (self *Stack) top() *Frame {
 	return self._top
 }
 
+//获取整个栈的栈帧数组,从栈顶开始到栈底
+func (self *Stack) GetFrames() []*Frame {
+	frames := make([]*Frame, 0, self.size)
+	for frame := self._top; frame != nil; frame = frame.lower {
+		frames = append(frames, frame)
+	}
+	return frames
+}
+
 func (self *Stack) isEmpty() bool {
 	return self._top == nil
 }

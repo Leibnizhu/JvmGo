@@ -21,3 +21,4 @@ mapred-site.xml
 #.vscode
 *.class
 *.java
+__debug_bin

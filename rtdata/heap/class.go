@@ -4,21 +4,22 @@ import "jvmgo/classfile"
 import "strings"
 
 type Class struct {
-	accessFlags       uint16 //访问修饰
-	name              string // 当前类名
-	superClassName    string //父类名
-	interfaceNames    []string //接口名
-	superClass        *Class //父类
-	interfaces        []*Class //接口
+	accessFlags       uint16        //访问修饰
+	name              string        // 当前类名
+	superClassName    string        //父类名
+	interfaceNames    []string      //接口名
+	superClass        *Class        //父类
+	interfaces        []*Class      //接口
 	constantPool      *ConstantPool //常量池
-	fields            []*Field //字段表
-	methods           []*Method //方法表
-	loader            *ClassLoader //类加载器指针
-	instanceSlotCount uint //实例变量占空间大小
-	staticSlotCount   uint //类变量占空间大小
-	staticVars        Slots //静态变量
-	initStarted       bool //类是否已初始化，即<clinit>是否已经执行
-	jClass            *Object //java.lang.Class实例
+	fields            []*Field      //字段表
+	methods           []*Method     //方法表
+	sourceFile        string        //源码文件名
+	loader            *ClassLoader  //类加载器指针
+	instanceSlotCount uint          //实例变量占空间大小
+	staticSlotCount   uint          //类变量占空间大小
+	staticVars        Slots         //静态变量
+	initStarted       bool          //类是否已初始化，即<clinit>是否已经执行
+	jClass            *Object       //java.lang.Class实例
 }
 
 //ClassFile 对象转 Class对象
@@ -29,9 +30,17 @@ func newClass(cf *classfile.ClassFile) *Class {
 	class.superClassName = cf.SuperClassName()
 	class.interfaceNames = cf.InterfaceNames()
 	class.constantPool = newConstantPool(class, cf.ConstantPool()) //常量池转换
-	class.fields = newFields(class, cf.Fields()) //字段表转换
-	class.methods = newMethods(class, cf.Methods()) //方法表转换
+	class.fields = newFields(class, cf.Fields())                   //字段表转换
+	class.methods = newMethods(class, cf.Methods())                //方法表转换
+	class.sourceFile = getSourceFile(cf)
 	return class
+}
+
+func getSourceFile(cf *classfile.ClassFile) string {
+	if sfAttr := cf.SourceFileAttribute(); sfAttr != nil {
+		return sfAttr.FileName()
+	}
+	return "Unknown" // 编译参数可以控制不输出源代码文件名到class中,所以可能未知
 }
 
 //类访问标志相关的查询方法
@@ -75,6 +84,9 @@ func (self *Class) Fields() []*Field {
 }
 func (self *Class) Methods() []*Method {
 	return self.methods
+}
+func (self *Class) SourceFile() string {
+	return self.sourceFile
 }
 func (self *Class) SuperClass() *Class {
 	return self.superClass
