@@ -1,35 +1,18 @@
 package main
+
 import "fmt"
-import "strings"
+
 import "jvmgo/classpath"
 import "jvmgo/classfile"
-import "jvmgo/rtdata/heap"
 
-func main(){
+func main() {
 	cmd := parseCmd()
 	if cmd.versionFlag {
 		fmt.Printf("version 0.0.1 Leibniz special")
 	} else if cmd.helpFlag || cmd.class == "" {
 		printUsage()
 	} else {
-		startJVM(cmd)
-	}
-}
-
-func startJVM(cmd *Cmd){
-	classpath := classpath.Parse(cmd.XjreOption,cmd.cpOption)
-	fmt.Printf("classpath:%s class:%s args:%s\n", classpath, cmd.class,cmd.args)
-	className := strings.Replace(cmd.class, ".", "/", -1) //类名改成类路径
-	classfile := loadClass(className, classpath)
-	fmt.Println(cmd.class)
-	printClassInfo(classfile)
-	classLoader := heap.NewClassLoader(classpath, cmd.verboseClassFlag)
-	mainClass := classLoader.LoadClass(className) //加载主类
-	mainMethod := mainClass.GetMainMethod() //获取main()入口函数
-	if mainMethod != nil {
-		interpret(mainMethod, cmd.verboseInstFlag, cmd.args) //执行main方法
-	} else {
-		fmt.Printf("Main method not found in class %s\n", cmd.class)
+		newJVM(cmd).start()
 	}
 }
 

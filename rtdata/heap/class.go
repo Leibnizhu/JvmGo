@@ -123,14 +123,14 @@ func (self *Class) GetPackageName() string {
 
 //main() 入口方法
 func (self *Class) GetMainMethod() *Method {
-	return self.getStaticMethod("main", "([Ljava/lang/String;)V")
+	return self.GetStaticMethod("main", "([Ljava/lang/String;)V")
 }
 func (self *Class) GetClinitMethod() *Method {
-	return self.getStaticMethod("<clinit>", "()V")
+	return self.GetStaticMethod("<clinit>", "()V")
 }
 
 //获取静态方法的方法
-func (self *Class) getStaticMethod(name, descriptor string) *Method {
+func (self *Class) GetStaticMethod(name, descriptor string) *Method {
 	for _, method := range self.methods { //遍历查找 静态的 同名的 同签名的 方法， 应该唯一
 		if method.IsStatic() &&
 			method.name == name &&
