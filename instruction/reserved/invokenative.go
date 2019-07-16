@@ -4,7 +4,11 @@ import "jvmgo/instruction/base"
 import "jvmgo/rtdata"
 import "jvmgo/native"
 import _ "jvmgo/native/java/lang"
+import _ "jvmgo/native/java/security"
+import _ "jvmgo/native/java/io"
+import _ "jvmgo/native/java/util/concurrent/atomic"
 import _ "jvmgo/native/sun/misc"
+import _ "jvmgo/native/sun/reflect"
 
 // 调用本地方法指令，不需要操作数
 type INVOKE_NATIVE struct{ base.NoOperandsInstruction }

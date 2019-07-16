@@ -91,11 +91,17 @@ func (self *Class) SourceFile() string {
 func (self *Class) SuperClass() *Class {
 	return self.superClass
 }
+func (self *Class) Interfaces() []*Class {
+	return self.interfaces
+}
 func (self *Class) Loader() *ClassLoader {
 	return self.loader
 }
 func (self *Class) JClass() *Object {
 	return self.jClass
+}
+func (self *Class) AccessFlags() uint16 {
+	return self.accessFlags
 }
 
 func (self *Class) InitStarted() bool {
@@ -210,4 +216,46 @@ func (self *Class) SetRefVar(fieldName, fieldDescriptor string, ref *Object) {
 
 func (self *Class) GetInstanceMethod(name, descriptor string) *Method {
 	return self.getMethod(name, descriptor, false)
+}
+
+func (self *Class) GetFields(publicOnly bool) []*Field {
+	if publicOnly {
+		publicFields := make([]*Field, 0, len(self.fields))
+		for _, field := range self.fields {
+			if field.IsPublic() {
+				publicFields = append(publicFields, field)
+			}
+		}
+		return publicFields
+	} else {
+		return self.fields
+	}
+}
+
+func (self *Class) GetConstructor(descriptor string) *Method {
+	return self.GetInstanceMethod("<init>", descriptor)
+}
+
+func (self *Class) GetConstructors(publicOnly bool) []*Method {
+	constructors := make([]*Method, 0, len(self.methods))
+	for _, method := range self.methods {
+		if method.isConstructor() {
+			if !publicOnly || method.IsPublic() {
+				constructors = append(constructors, method)
+			}
+		}
+	}
+	return constructors
+}
+
+func (self *Class) GetMethods(publicOnly bool) []*Method {
+	methods := make([]*Method, 0, len(self.methods))
+	for _, method := range self.methods {
+		if !method.isClinit() && !method.isConstructor() {
+			if !publicOnly || method.IsPublic() {
+				methods = append(methods, method)
+			}
+		}
+	}
+	return methods
 }

@@ -1,4 +1,5 @@
 package heap
+
 //对Class对象进行数组方面功能的扩展
 
 //根据类名判断是否数组类型
@@ -36,4 +37,8 @@ func (self *Class) NewArray(count uint) *Object {
 	default:
 		return &Object{self, make([]*Object, count), nil}
 	}
+}
+
+func NewByteArray(loader *ClassLoader, bytes []int8) *Object {
+	return &Object{loader.LoadClass("[B"), bytes, nil}
 }

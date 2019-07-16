@@ -6,16 +6,17 @@ import "unsafe"
 
 const jlObject = "java/lang/Object"
 
-func init(){
+func init() {
 	native.Register(jlObject, "getClass", "()Ljava/lang/Class;", getClass)
 	native.Register(jlObject, "hashCode", "()I", hashCode)
 	native.Register(jlObject, "clone", "()Ljava/lang/Object;", clone)
+	native.Register(jlObject, "notifyAll", "()V", notifyAll)
 }
 
 //对应  public final native Class<?> getClass() 方法
-func getClass(frame *rtdata.Frame){
+func getClass(frame *rtdata.Frame) {
 	this := frame.LocalVars().GetThis() //从局部变量表拿到this引用
-	class := this.Class().JClass() //拿到类对象
+	class := this.Class().JClass()      //拿到类对象
 	frame.OperandStack().PushRef(class) //如操作数栈
 }
 
@@ -34,4 +35,9 @@ func clone(frame *rtdata.Frame) {
 		panic("java.lang.CloneNotSupportedException")
 	}
 	frame.OperandStack().PushRef(this.Clone())
+}
+
+//对应 public final native void notifyAll();
+func notifyAll(frame *rtdata.Frame) {
+	// todo
 }

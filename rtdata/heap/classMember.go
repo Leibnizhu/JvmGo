@@ -1,13 +1,16 @@
 package heap
 
 import "jvmgo/classfile"
+
 //字段信息  和 方法信息 的共同父类
 
 type ClassMember struct {
-	accessFlags uint16 //访问标志
-	name        string
-	descriptor  string //签名，描述符
-	class       *Class //所在的类对象
+	accessFlags    uint16 //访问标志
+	name           string
+	signature      string
+	descriptor     string //签名，描述符
+	annotationData []byte // RuntimeVisibleAnnotations_attribute
+	class          *Class //所在的类对象
 }
 
 //从 ClassFile 的 MemberInfo 复制属性
@@ -38,6 +41,15 @@ func (self *ClassMember) IsSynthetic() bool {
 }
 
 //其他 getter方法
+func (self *ClassMember) AccessFlags() uint16 {
+	return self.accessFlags
+}
+func (self *ClassMember) Signature() string {
+	return self.signature
+}
+func (self *ClassMember) AnnotationData() []byte {
+	return self.annotationData
+}
 func (self *ClassMember) Name() string {
 	return self.name
 }

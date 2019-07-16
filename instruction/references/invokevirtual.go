@@ -26,8 +26,9 @@ func (self *INVOKE_VIRTUAL) Execute(frame *rtdata.Frame) {
 		resolvedMethod.Class().GetPackageName() != currentClass.GetPackageName() &&
 		ref.Class() != currentClass &&
 		!ref.Class().IsSubClassOf(currentClass) {
-
-		panic("java.lang.IllegalAccessError")
+		if !(ref.Class().IsArray() && resolvedMethod.Name() == "clone") {
+			panic("java.lang.IllegalAccessError")
+		}
 	}
 	//根据对象的类来查找真正要执行的方法，这里跟 invokespecial 指令不一样，后者直接使用方法引用对应的方法
 	methodToBeInvoked := heap.LookupMethodInClass(ref.Class(), methodRef.Name(), methodRef.Descriptor())

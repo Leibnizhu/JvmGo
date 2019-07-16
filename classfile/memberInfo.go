@@ -1,16 +1,17 @@
 package classfile
+
 //class文件类字段和类方法的结构体
 type MemberInfo struct {
-	cp ConstantPool
-	accessFlags uint16 //访问标志
-	nameIndex uint16 //名字的常量池指针
-	descriptorIndex uint16 //字段或方法的描述符，的常量池指针
-	attributes []AttributeInfo //属性表
+	cp              ConstantPool
+	accessFlags     uint16          //访问标志
+	nameIndex       uint16          //名字的常量池指针
+	descriptorIndex uint16          //字段或方法的描述符，的常量池指针
+	attributes      []AttributeInfo //属性表
 }
 
 //读取字段表/方法表
-func readMembers (reader *ClassReader, cp ConstantPool) []*MemberInfo {
-	memberCount :=  reader.readUint16() //个数
+func readMembers(reader *ClassReader, cp ConstantPool) []*MemberInfo {
+	memberCount := reader.readUint16()          //个数
 	members := make([]*MemberInfo, memberCount) //初始化存放字段表/方法表的数组
 	for i := range members {
 		members[i] = readMember(reader, cp) //读取单个字段/方法
@@ -19,13 +20,13 @@ func readMembers (reader *ClassReader, cp ConstantPool) []*MemberInfo {
 }
 
 //读取单个字段/方法
-func readMember (reader *ClassReader, cp ConstantPool) *MemberInfo {
-	return &MemberInfo {
-		cp: cp,
-		accessFlags: reader.readUint16(),
-		nameIndex: reader.readUint16(),
+func readMember(reader *ClassReader, cp ConstantPool) *MemberInfo {
+	return &MemberInfo{
+		cp:              cp,
+		accessFlags:     reader.readUint16(),
+		nameIndex:       reader.readUint16(),
 		descriptorIndex: reader.readUint16(),
-		attributes: readAttributes(reader, cp), //读取属性表
+		attributes:      readAttributes(reader, cp), //读取属性表
 	}
 }
 
@@ -58,6 +59,38 @@ func (self *MemberInfo) ConstantValueAttribute() *ConstantValueAttribute {
 		switch attrInfo.(type) {
 		case *ConstantValueAttribute:
 			return attrInfo.(*ConstantValueAttribute)
+		}
+	}
+	return nil
+}
+func (self *MemberInfo) ExceptionsAttribute() *ExceptionsAttribute {
+	for _, attrInfo := range self.attributes {
+		switch attrInfo.(type) {
+		case *ExceptionsAttribute:
+			return attrInfo.(*ExceptionsAttribute)
+		}
+	}
+	return nil
+}
+
+func (self *MemberInfo) RuntimeVisibleAnnotationsAttributeData() []byte {
+	return self.getUnparsedAttributeData("RuntimeVisibleAnnotations")
+}
+func (self *MemberInfo) RuntimeVisibleParameterAnnotationsAttributeData() []byte {
+	return self.getUnparsedAttributeData("RuntimeVisibleParameterAnnotationsAttribute")
+}
+func (self *MemberInfo) AnnotationDefaultAttributeData() []byte {
+	return self.getUnparsedAttributeData("AnnotationDefault")
+}
+
+func (self *MemberInfo) getUnparsedAttributeData(name string) []byte {
+	for _, attrInfo := range self.attributes {
+		switch attrInfo.(type) {
+		case *UnparsedAttribute:
+			unparsedAttr := attrInfo.(*UnparsedAttribute)
+			if unparsedAttr.name == name {
+				return unparsedAttr.info
+			}
 		}
 	}
 	return nil

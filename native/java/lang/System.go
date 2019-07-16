@@ -1,11 +1,24 @@
 package lang
 
-import "jvmgo/native"
-import "jvmgo/rtdata"
-import "jvmgo/rtdata/heap"
+import (
+	"jvmgo/instruction/base"
+	"jvmgo/native"
+	"jvmgo/rtdata"
+	"jvmgo/rtdata/heap"
+	"runtime"
+	"time"
+)
+
+const jlSystem = "java/lang/System"
 
 func init() {
-	native.Register("java/lang/System", "arraycopy", "(Ljava/lang/Object;ILjava/lang/Object;II)V", arraycopy)
+	native.Register(jlSystem, "arraycopy", "(Ljava/lang/Object;ILjava/lang/Object;II)V", arraycopy)
+	native.Register(jlSystem, "initProperties", "(Ljava/util/Properties;)Ljava/util/Properties;", initProperties)
+	native.Register(jlSystem, "setIn0", "(Ljava/io/InputStream;)V", setIn0)
+	native.Register(jlSystem, "setOut0", "(Ljava/io/PrintStream;)V", setOut0)
+	native.Register(jlSystem, "setErr0", "(Ljava/io/PrintStream;)V", setErr0)
+	native.Register(jlSystem, "currentTimeMillis", "()J", currentTimeMillis)
+	native.Register(jlSystem, "nanoTime", "()J", nanoTime)
 }
 
 //对应 public static native void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
@@ -46,4 +59,93 @@ func checkArrayCopy(src, dest *heap.Object) bool {
 		return srcClass == destClass
 	}
 	return true
+}
+
+//对应  private static native Properties initProperties(Properties props);
+func initProperties(frame *rtdata.Frame) {
+	vars := frame.LocalVars()
+	props := vars.GetRef(0)
+
+	stack := frame.OperandStack()
+	stack.PushRef(props)
+
+	// public synchronized Object setProperty(String key, String value)
+	setPropMethod := props.Class().GetInstanceMethod("setProperty", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")
+	thread := frame.Thread()
+	for key, val := range _sysProps() {
+		jKey := heap.JString(frame.Method().Class().Loader(), key)
+		jVal := heap.JString(frame.Method().Class().Loader(), val)
+		ops := rtdata.NewOperandStack(3)
+		ops.PushRef(props)
+		ops.PushRef(jKey)
+		ops.PushRef(jVal)
+		shimFrame := rtdata.NewShimFrame(thread, ops)
+		thread.PushFrame(shimFrame)
+
+		base.InvokeMethod(shimFrame, setPropMethod)
+	}
+}
+
+//默认系统配置
+func _sysProps() map[string]string {
+	return map[string]string{
+		"java.version":         "1.8.0",
+		"java.vendor":          "jvm.go",
+		"java.vendor.url":      "https://github.com/zxh0/jvm.go",
+		"java.home":            "todo",
+		"java.class.version":   "52.0",
+		"java.class.path":      "todo",
+		"java.awt.graphicsenv": "sun.awt.CGraphicsEnvironment",
+		"os.name":              runtime.GOOS,   // todo
+		"os.arch":              runtime.GOARCH, // todo
+		"os.version":           "",             // todo
+		"file.separator":       "/",            // todo os.PathSeparator
+		"path.separator":       ":",            // todo os.PathListSeparator
+		"line.separator":       "\n",           // todo
+		"user.name":            "",             // todo
+		"user.home":            "",             // todo
+		"user.dir":             ".",            // todo
+		"user.country":         "CN",           // todo
+		"file.encoding":        "UTF-8",
+		"sun.stdout.encoding":  "UTF-8",
+		"sun.stderr.encoding":  "UTF-8",
+	}
+}
+
+//对应  private static native void setIn0(InputStream in);
+func setIn0(frame *rtdata.Frame) {
+	vars := frame.LocalVars()
+	in := vars.GetRef(0)
+	sysClass := frame.Method().Class()
+	sysClass.SetRefVar("in", "Ljava/io/InputStream;", in)
+}
+
+//对应  private static native void setOut0(PrintStream out);
+func setOut0(frame *rtdata.Frame) {
+	vars := frame.LocalVars()
+	out := vars.GetRef(0)
+	sysClass := frame.Method().Class()
+	sysClass.SetRefVar("out", "Ljava/io/PrintStream;", out)
+}
+
+//对应  private static native void setErr0(PrintStream err);
+func setErr0(frame *rtdata.Frame) {
+	vars := frame.LocalVars()
+	err := vars.GetRef(0)
+	sysClass := frame.Method().Class()
+	sysClass.SetRefVar("err", "Ljava/io/PrintStream;", err)
+}
+
+//对应  public static native long currentTimeMillis();
+func currentTimeMillis(frame *rtdata.Frame) {
+	millis := time.Now().UnixNano() / int64(time.Millisecond) //用go自带的算毫秒数
+	stack := frame.OperandStack()
+	stack.PushLong(millis)
+}
+
+//对应  public static native long nanoTime();
+func nanoTime(frame *rtdata.Frame) {
+	nanos := time.Now().UnixNano() //用go自带的纳秒数
+	stack := frame.OperandStack()
+	stack.PushLong(nanos)
 }

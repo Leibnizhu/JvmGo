@@ -4,12 +4,16 @@ import "jvmgo/classfile"
 
 type Method struct {
 	ClassMember
-	maxStack        uint                                //操作栈大小
-	maxLocals       uint                                //局部变量表大小
-	code            []byte                              //字节码
-	argSlotCount    uint                                //方法的参数的slot数
-	exceptionTable  ExceptionTable                      //异常处理表
-	lineNumberTable *classfile.LineNumberTableAttribute //源代码行数
+	maxStack                uint                                //操作栈大小
+	maxLocals               uint                                //局部变量表大小
+	code                    []byte                              //字节码
+	argSlotCount            uint                                //方法的参数的slot数
+	exceptionTable          ExceptionTable                      //异常处理表
+	lineNumberTable         *classfile.LineNumberTableAttribute //源代码行数
+	exceptions              *classfile.ExceptionsAttribute      //
+	parameterAnnotationData []byte                              // RuntimeVisibleParameterAnnotations_attribute
+	annotationDefaultData   []byte                              // AnnotationDefault_attribute
+	parsedDescriptor        *MethodDescriptor
 }
 
 //从 class文件 解析 Method对象
@@ -27,6 +31,7 @@ func newMethod(class *Class, cfMethod *classfile.MemberInfo) *Method {
 	method.copyMemberInfo(cfMethod)
 	method.copyAttributes(cfMethod)
 	md := parseMethodDescriptor(method.descriptor)
+	method.parsedDescriptor = md
 	method.calcArgSlotCount(md.parameterTypes) //计算方法的参数slot数
 	if method.IsNative() {                     //本地方法需要注入字节码和其他信息
 		method.injectCodeAttribute(md.returnType)
@@ -44,6 +49,10 @@ func (self *Method) copyAttributes(cfMethod *classfile.MemberInfo) {
 		self.exceptionTable = newExceptionTable(codeAttr.ExceptionTable(),
 			self.class.constantPool)
 	}
+	self.exceptions = cfMethod.ExceptionsAttribute()
+	self.annotationData = cfMethod.RuntimeVisibleAnnotationsAttributeData()
+	self.parameterAnnotationData = cfMethod.RuntimeVisibleParameterAnnotationsAttributeData()
+	self.annotationDefaultData = cfMethod.AnnotationDefaultAttributeData()
 }
 
 func (self *Method) calcArgSlotCount(paramTypes []string) {
@@ -97,6 +106,13 @@ func (self *Method) IsStrict() bool {
 	return 0 != self.accessFlags&ACC_STRICT
 }
 
+func (self *Method) isConstructor() bool {
+	return !self.IsStatic() && self.name == "<init>"
+}
+func (self *Method) isClinit() bool {
+	return self.IsStatic() && self.name == "<clinit>"
+}
+
 //其他 getter 方法
 func (self *Method) MaxStack() uint {
 	return self.maxStack
@@ -106,6 +122,15 @@ func (self *Method) MaxLocals() uint {
 }
 func (self *Method) Code() []byte {
 	return self.code
+}
+func (self *Method) ParameterAnnotationData() []byte {
+	return self.parameterAnnotationData
+}
+func (self *Method) AnnotationDefaultData() []byte {
+	return self.annotationDefaultData
+}
+func (self *Method) ParsedDescriptor() *MethodDescriptor {
+	return self.parsedDescriptor
 }
 func (self *Method) ArgSlotCount() uint {
 	return self.argSlotCount
@@ -129,4 +154,43 @@ func (self *Method) GetLineNumber(pc int) int {
 		return -1
 	}
 	return self.lineNumberTable.GetLineNumber(pc)
+}
+
+// reflection
+func (self *Method) ParameterTypes() []*Class {
+	if self.argSlotCount == 0 {
+		return nil
+	}
+
+	paramTypes := self.parsedDescriptor.parameterTypes
+	paramClasses := make([]*Class, len(paramTypes))
+	for i, paramType := range paramTypes {
+		paramClassName := toClassName(paramType)
+		paramClasses[i] = self.class.loader.LoadClass(paramClassName)
+	}
+
+	return paramClasses
+}
+
+func (self *Method) ReturnType() *Class {
+	returnType := self.parsedDescriptor.returnType
+	returnClassName := toClassName(returnType)
+	return self.class.loader.LoadClass(returnClassName)
+}
+
+func (self *Method) ExceptionTypes() []*Class {
+	if self.exceptions == nil {
+		return nil
+	}
+
+	exIndexTable := self.exceptions.ExceptionIndexTable()
+	exClasses := make([]*Class, len(exIndexTable))
+	cp := self.class.constantPool
+
+	for i, exIndex := range exIndexTable {
+		classRef := cp.GetConstant(uint(exIndex)).(*ClassRef)
+		exClasses[i] = classRef.ResolvedClass()
+	}
+
+	return exClasses
 }

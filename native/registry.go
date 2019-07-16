@@ -25,8 +25,10 @@ func FindNativeMethod(className, methodName, methodDescriptor string) NativeMeth
 		return method
 	}
 	//对于registerNatives方法，Object等类通过它注册其他本地方法，在这里没什么用，返回空实现
-	if methodDescriptor == "()V" && methodName == "registerNatives" {
-		return emptyNativeMethod
+	if methodDescriptor == "()V" {
+		if methodName == "registerNatives" || methodName == "initIDs" {
+			return emptyNativeMethod
+		}
 	}
 	return nil //注册表里找不到，又不是registerNatives，则返回nil
 }
