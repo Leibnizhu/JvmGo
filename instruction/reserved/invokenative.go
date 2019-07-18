@@ -7,6 +7,7 @@ import _ "jvmgo/native/java/lang"
 import _ "jvmgo/native/java/security"
 import _ "jvmgo/native/java/io"
 import _ "jvmgo/native/java/util/concurrent/atomic"
+import _ "jvmgo/native/sun/io"
 import _ "jvmgo/native/sun/misc"
 import _ "jvmgo/native/sun/reflect"
 

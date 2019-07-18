@@ -17,6 +17,7 @@ func init() {
 	native.Register(jlSystem, "setIn0", "(Ljava/io/InputStream;)V", setIn0)
 	native.Register(jlSystem, "setOut0", "(Ljava/io/PrintStream;)V", setOut0)
 	native.Register(jlSystem, "setErr0", "(Ljava/io/PrintStream;)V", setErr0)
+	native.Register(jlSystem, "mapLibraryName", "(Ljava/lang/String;)Ljava/lang/String;", mapLibraryName)
 	native.Register(jlSystem, "currentTimeMillis", "()J", currentTimeMillis)
 	native.Register(jlSystem, "nanoTime", "()J", nanoTime)
 }
@@ -148,4 +149,18 @@ func nanoTime(frame *rtdata.Frame) {
 	nanos := time.Now().UnixNano() //用go自带的纳秒数
 	stack := frame.OperandStack()
 	stack.PushLong(nanos)
+}
+
+//FIXME 对应  public static native String mapLibraryName(String libname);
+func mapLibraryName(frame *rtdata.Frame) {
+	vars := frame.LocalVars()
+	libName := vars.GetRef(0)
+	if libName == nil {
+		panic("java.lang.NullPointerException")
+	}
+	goLibName := heap.GoString(libName)
+	libraryName := "lib" + goLibName + ".so"
+	cl := frame.Method().Class().Loader()
+	stack := frame.OperandStack()
+	stack.PushRef(heap.JString(cl, libraryName))
 }

@@ -39,6 +39,15 @@
             "mode": "debug",
             "program": "${env:GOPATH}/src/jvmgo/main.go",
             "args": ["ParseIntTest"]
+        },
+        {
+            "name": "HelloWorld",
+            "type": "go",
+            // "showLog": true,
+            "request": "launch",
+            "mode": "debug",
+            "program": "${env:GOPATH}/src/jvmgo/main.go",
+            "args": ["HelloWorld"]
         }
     ]
 }
